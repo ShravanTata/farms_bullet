@@ -1,37 +1,37 @@
-#!/usr/bin/env python
 """Setup script"""
 
-from setuptools import setup, find_packages
-from setuptools.extension import Extension
-from setuptools import dist
-
-dist.Distribution().fetch_build_eggs(['numpy'])
 import numpy as np
+from Cython.Build import cythonize  # pylint: disable=wrong-import-position
+from Cython.Compiler import Options  # pylint: disable=wrong-import-position
+from farms_core import get_include_paths  # pylint: disable=wrong-import-position
+from setuptools import setup
+from setuptools.extension import Extension
 
-dist.Distribution().fetch_build_eggs(['Cython>=0.15.1'])
-from Cython.Build import cythonize
 
-dist.Distribution().fetch_build_eggs(['farms_core'])
-from farms_core import get_include_paths
-
+# Cython options
 DEBUG = False
+Options.docstrings = True
+Options.embed_pos_in_docstring = False
+Options.generate_cleanup_code = False
+Options.clear_to_none = True
+Options.annotate = False
+Options.fast_fail = False
+Options.warning_errors = False
+Options.error_on_unknown_names = True
+Options.error_on_uninitialized = True
+Options.convert_range = True
+Options.cache_builtins = True
+Options.gcc_branch_hints = True
+Options.lookup_module_cpdef = False
+Options.embed = None
+Options.cimport_from_pyx = False
+Options.buffer_max_dims = 8
+Options.closure_freelist_size = 8
 
 
 setup(
     name='farms_bullet',
-    version='0.1',
-    author='farmsdev',
-    author_email='biorob-farms@groupes.epfl.ch',
-    description='FARMS package for running simulation with the Bullet engine',
-    keywords='farms simulation bullet',
-    packages=find_packages(),
-    package_dir={'farms_bullet': 'farms_bullet'},
-    package_data={'farms_bullet': [
-        f'{folder}/*.pxd'
-        for folder in ['sensors', 'swimming']
-    ]},
-    include_package_data=True,
-    include_dirs=[np.get_include()],
+    include_dirs=[np.get_include()] + get_include_paths(),
     ext_modules=cythonize(
         [
             Extension(
@@ -57,14 +57,4 @@ setup(
         }
     ),
     zip_safe=False,
-    install_requires=[
-        'farms_core',
-        'cython',
-        'numpy',
-        'scipy',
-        'matplotlib',
-        'tqdm',
-        'trimesh',
-        'pybullet',
-    ],
 )
