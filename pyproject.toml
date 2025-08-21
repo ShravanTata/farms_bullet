@@ -21,8 +21,8 @@ dependencies = [
     "trimesh",
     "pybullet",
     "imageio",
-    # "farms_core @ git+https://github.com/farmsim/farms_core.git",
-    # "farms_sim @ git+https://github.com/farmsim/farms_sim.git",
+    "farms_core",
+    "farms_sim",
 ]
 keywords = ["farms", "framework", "animals", "robot", " modeling", "simulation"]
 classifiers = [
